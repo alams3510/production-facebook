@@ -40,6 +40,7 @@ if (process.env.NODE_ENV === "production") {
     res.sendFile(path.resolve(__dirname, "frontend", "build", "index.html"))
   );
 }
+
 //uploading an image
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -58,6 +59,15 @@ app.post("/api/upload", upload.single("file"), (req, res) => {
   }
 });
 const port = process.env.PORT || 3001;
+// Add Access Control Allow Origin headers
+app.use((req, res, next) => {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept"
+  );
+  next();
+});
 app.listen(port, () => {
   console.log("Backend server is running! on port number " + port);
 });
