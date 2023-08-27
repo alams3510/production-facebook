@@ -10,15 +10,23 @@ import axiosInstance from "../../services/instance";
 const Feed = ({ username }) => {
   const { user } = useContext(AuthContext);
   const [posts, setPosts] = useState([]);
+  const [isfetching, setIsfetching] = useState(false);
   useEffect(() => {
     const fetchPosts = async () => {
-      const res = username
-        ? await axiosInstance.get("/posts/profile/" + username)
-        : await axiosInstance.get(`posts/timeline/${user._id}`);
-      setPosts(res.data);
-      res.data.sort((p1, p2) => {
-        return new Date(p2.createdAt) - new Date(p1.createdAt);
-      });
+      try {
+        setIsfetching(true);
+        const res = username
+          ? await axiosInstance.get("/posts/profile/" + username)
+          : await axiosInstance.get(`posts/timeline/${user._id}`);
+        setPosts(res.data);
+        setIsfetching(false);
+        res.data.sort((p1, p2) => {
+          return new Date(p2.createdAt) - new Date(p1.createdAt);
+        });
+      } catch (error) {
+        setIsfetching(false);
+        console.error(error);
+      }
     };
     fetchPosts();
   }, [username, user._id]);
@@ -32,7 +40,7 @@ const Feed = ({ username }) => {
         })
       ) : (
         <h1 style={{ textAlign: "center", color: "grey", marginTop: "20px" }}>
-          You have No post yet
+          {isfetching ? "Loading...." : "You have No post yet"}
         </h1>
       )}
     </div>

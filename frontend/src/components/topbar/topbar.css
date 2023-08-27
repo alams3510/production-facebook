@@ -58,8 +58,12 @@
   cursor: pointer;
   text-decoration: none;
   color: white;
-  
+  font-weight: 700;
 }
+.active{
+color: rgb(43, 244, 60);
+}
+
 Link{
 text-decoration: none;
 }
@@ -72,6 +76,9 @@ text-decoration: none;
   cursor: pointer;
   font-size: 20px;
   position: relative;
+}
+.icon:hover{
+color: rgb(43, 244, 60);
 }
 .num {
   background-color: red;

@@ -2,51 +2,53 @@ import "./topbar.css";
 import { FiSearch } from "react-icons/fi";
 import { BsPersonFill, BsFillChatLeftDotsFill } from "react-icons/bs";
 import { IoMdNotifications } from "react-icons/io";
-import { Link, useNavigate } from "react-router-dom";
+import { NavLink, Link, useNavigate } from "react-router-dom";
 import { useContext, useState } from "react";
 import { AuthContext } from "../../context/AuthContext";
 import Form from "../profileForm/Form";
 import { enqueueSnackbar } from "notistack";
 import axiosInstance from "../../services/instance";
+import Loader from "../../utility/Loader";
 
-const TopBar = ({ tempuser }) => {
+const TopBar = () => {
   const navigate = useNavigate();
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
   const [openProfile, setOpenProfile] = useState(false);
   const [modal, setModal] = useState(false);
   const [passwordModal, setPasswordModal] = useState(false);
   const [password, setPassword] = useState("");
-  const { user } = useContext(AuthContext);
-  const [loading, setLoading] = useState(false);
+  const { user, loader, dispatch } = useContext(AuthContext);
 
   const handleLogout = () => {
-    setLoading(true);
+    dispatch({ type: "LOADER", payload: true });
+    // setLoading(true);
     localStorage.removeItem("user");
     navigate("/");
-
+    // setLoading(false);
+    dispatch({ type: "LOADER", payload: false });
     enqueueSnackbar({
       variant: "success",
       message: "you have successfully Logged Out",
     });
-    setLoading(false);
     window.location.reload();
   };
 
   const deleteAccount = async () => {
     try {
       alert("Are you Sure to delete Your Account Permanently??");
-      setLoading(true);
-
+      // setLoading(true);
+      dispatch({ type: "LOADER", payload: true });
       await axiosInstance.delete("/users/" + user._id);
       await axiosInstance.delete("/posts/" + user._id);
       localStorage.removeItem("user");
       navigate("/");
       // window.location.reload();
+      // setLoading(false);
+      dispatch({ type: "LOADER", payload: false });
       enqueueSnackbar({
         variant: "success",
         message: "you have deleted Permanently",
       });
-      setLoading(false);
 
       window.location.reload();
     } catch (error) {
@@ -59,22 +61,23 @@ const TopBar = ({ tempuser }) => {
   };
   const handleUpdatePassword = async () => {
     if (password != null) {
-      setLoading(true);
+      // setLoading(true);
+      dispatch({ type: "LOADER", payload: true });
       try {
         await axiosInstance.put("/users/" + user._id + "/updatePassword", {
           password,
         });
         setPasswordModal(false);
-        setLoading(false);
-
+        // setLoading(false);
+        dispatch({ type: "LOADER", payload: false });
         enqueueSnackbar({
           variant: "success",
           message: "Password Updated Successfully",
         });
         setPassword("");
       } catch (error) {
-        setLoading(false);
-
+        // setLoading(false);
+        dispatch({ type: "LOADER", payload: false });
         enqueueSnackbar({
           variant: "error",
           message: error,
@@ -82,27 +85,18 @@ const TopBar = ({ tempuser }) => {
       }
     }
   };
+
+  const handleIconClick = () => {
+    enqueueSnackbar({
+      variant: "info",
+      message: "This functionality is implemented later",
+    });
+  };
   return (
     <>
-      {loading && (
+      {loader && (
         <>
-          <div
-            style={{
-              backgroundColor: "green",
-              width: "300px",
-              padding: "10px 20px",
-              position: "absolute",
-              top: 55,
-              right: 0,
-              left: 0,
-              margin: "0px auto",
-              zIndex: 999,
-            }}
-          >
-            <h2 style={{ textAlign: "center", color: "white" }}>
-              Loading Please wait....
-            </h2>
-          </div>
+          <Loader />
         </>
       )}
       <div className="topbarContainer">
@@ -125,26 +119,27 @@ const TopBar = ({ tempuser }) => {
         <div className="topRight">
           <div className="topRightwrapper">
             <div className="textLink">
-              <Link to={`/`}>
-                {" "}
-                <span style={{ textDecoration: "none" }} className="text">
-                  HomePage
-                </span>
-              </Link>
-              <Link to={`/profile/${user.username}`}>
-                <span className="text">Timeline</span>
-              </Link>
+              <NavLink className="text" activeClassName="active" to={`/`}>
+                HomePage
+              </NavLink>
+              <NavLink
+                activeClassName="active"
+                className="text"
+                to={`/profile/${user.username}`}
+              >
+                Timeline
+              </NavLink>
             </div>
             <div className="linkIcons">
-              <div className="icon">
+              <div onClick={handleIconClick} className="icon">
                 <BsPersonFill />
                 <span className="num">1</span>
               </div>
-              <div className="icon">
+              <div onClick={handleIconClick} className="icon">
                 <BsFillChatLeftDotsFill />
                 <span className="num">1</span>
               </div>
-              <div className="icon">
+              <div onClick={handleIconClick} className="icon">
                 <IoMdNotifications />
                 <span className="num">2</span>
               </div>
@@ -206,25 +201,9 @@ const TopBar = ({ tempuser }) => {
       )}
       {passwordModal && (
         <div className="formWrapper">
-          {loading && (
+          {loader && (
             <>
-              <div
-                style={{
-                  backgroundColor: "green",
-                  width: "300px",
-                  padding: "10px 20px",
-                  position: "absolute",
-                  top: 55,
-                  right: 0,
-                  left: 0,
-                  margin: "0px auto",
-                  zIndex: 999,
-                }}
-              >
-                <h2 style={{ textAlign: "center", color: "white" }}>
-                  Loading Please wait....
-                </h2>
-              </div>
+              <Loader />
             </>
           )}
           <div

@@ -3,25 +3,33 @@ import { GrFormAdd } from "react-icons/gr";
 import { useContext, useEffect } from "react";
 import { useState } from "react";
 import { AuthContext } from "../../context/AuthContext";
-import { Link } from "react-router-dom";
+import { NavLink, Link } from "react-router-dom";
 import { enqueueSnackbar } from "notistack";
 import axiosInstance from "../../services/instance";
-import axios from "axios";
 
 const RightBar = ({ user }) => {
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
-  const { user: currentUser, dispatch } = useContext(AuthContext);
+  const { user: currentUser, dispatch, loader } = useContext(AuthContext);
   const [friend, setFriend] = useState([]);
   const [allUsers, setAllUsers] = useState([]);
   const [follow, setFollow] = useState(false);
+  // const [loading, setLoading] = useState(false);
+
   useEffect(() => {
     const fetchFriendlist = async () => {
       try {
+        dispatch({ type: "LOADER", payload: true });
+        // setLoading(true);
         const friendList = await axiosInstance.get(
           "/users/friends/" + currentUser?._id
         );
         setFriend(friendList.data);
+        // setLoading(false);
+        dispatch({ type: "LOADER", payload: false });
       } catch (error) {
+        // setLoading(false);
+        dispatch({ type: "LOADER", payload: false });
+
         console.error(error);
       }
     };
@@ -30,9 +38,16 @@ const RightBar = ({ user }) => {
   useEffect(() => {
     const fetchAllUsers = async () => {
       try {
+        // setLoading(true);
+        dispatch({ type: "LOADER", payload: true });
+
         const allUserList = await axiosInstance.get("/users/allUsers");
         setAllUsers(allUserList.data);
+        // setLoading(false);
+        dispatch({ type: "LOADER", payload: false });
       } catch (error) {
+        // setLoading(false);
+        dispatch({ type: "LOADER", payload: false });
         console.error(error);
       }
     };
@@ -46,25 +61,36 @@ const RightBar = ({ user }) => {
   const handleFollow = async () => {
     try {
       if (!follow) {
+        // setLoading(true);
+        dispatch({ type: "LOADER", payload: true });
         await axiosInstance.put("/users/" + user._id + "/follow", {
           userId: currentUser._id,
         });
         dispatch({ type: "FOLLOW", payload: user._id });
+        // setLoading(false);
+        dispatch({ type: "LOADER", payload: false });
         enqueueSnackbar({
           variant: "success",
           message: "You have started following " + user.username,
         });
       } else {
+        // setLoading(true);
+        dispatch({ type: "LOADER", payload: true });
         await axiosInstance.put("/users/" + user._id + "/unfollow", {
           userId: currentUser._id,
         });
         dispatch({ type: "UNFOLLOW", payload: user._id });
+        // setLoading(false);
+        dispatch({ type: "LOADER", payload: false });
+
         enqueueSnackbar({
           variant: "warning",
           message: "You have unfollowed " + user.username,
         });
       }
     } catch (error) {
+      // setLoading(false);
+      dispatch({ type: "LOADER", payload: false });
       enqueueSnackbar({
         variant: "warning",
         message: "You can not follow " + user.username,
@@ -92,13 +118,17 @@ const RightBar = ({ user }) => {
             <span className="onlineText">
               Total Online Users : {allUsers.length - 1}
             </span>
-            <div style={{ width: "70%" }}>
+            <div style={{ width: "70%", height: "100vh" }}>
               {allUsers
                 .filter((val) => val.username !== currentUser.username)
                 .map((friend) => {
                   return (
-                    <Link key={friend._id} to={"/profile/" + friend.username}>
-                      <div className="friends">
+                    <div className="friends">
+                      <NavLink
+                        activeClassName="active"
+                        key={friend._id}
+                        to={"/profile/" + friend.username}
+                      >
                         <div className="online">
                           <img
                             src={
@@ -112,9 +142,27 @@ const RightBar = ({ user }) => {
 
                           <span className="status"></span>
                         </div>
-                        <span className="onlineName">{friend.username}</span>
-                      </div>
-                    </Link>
+                      </NavLink>
+
+                      <NavLink
+                        activeClassName="active"
+                        className="onlineName"
+                        key={friend._id}
+                        to={"/profile/" + friend.username}
+                      >
+                        {friend.username}
+                      </NavLink>
+                      <span
+                        style={{
+                          fontSize: "10px",
+                          paddingLeft: "5px",
+                          fontWeight: "500",
+                          color: "grey",
+                        }}
+                      >
+                        Online
+                      </span>
+                    </div>
                   );
                 })}
             </div>
@@ -130,7 +178,7 @@ const RightBar = ({ user }) => {
         {currentUser.username !== user.username ? (
           <button className="followbtn" onClick={handleFollow}>
             <div>{follow ? "UnFollow" : "Follow"}</div>{" "}
-            <GrFormAdd className="addicon" />
+            <GrFormAdd color="white" className="addicon" />
           </button>
         ) : (
           <div style={{ marginBottom: "10px" }}>
@@ -161,7 +209,10 @@ const RightBar = ({ user }) => {
             </span>
           </div>
           <div className="userFriends">
-            <h2>My Friends</h2>
+            <h2>
+              {currentUser.username !== user.username ? user.username : "My"}{" "}
+              Friends
+            </h2>
             <div style={{ display: "flex", flexWrap: "wrap" }}>
               {friend.map((friend) => {
                 return (

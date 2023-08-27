@@ -6,7 +6,6 @@ import { format } from "timeago.js";
 import { Link } from "react-router-dom";
 import { useContext } from "react";
 import { AuthContext } from "../../context/AuthContext";
-import moment from "moment/moment";
 
 const Post = ({ posts }) => {
   const { user: currentUser } = useContext(AuthContext);
