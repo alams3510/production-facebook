@@ -6,6 +6,7 @@ import { AuthContext } from "../../context/AuthContext";
 import { Link } from "react-router-dom";
 import { enqueueSnackbar } from "notistack";
 import axiosInstance from "../../services/instance";
+import axios from "axios";
 
 const RightBar = ({ user }) => {
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
@@ -31,7 +32,9 @@ const RightBar = ({ user }) => {
       console.log("allUserList");
 
       try {
-        const allUserList = await axiosInstance.get("/users/allUsers");
+        const allUserList = await axios.get(
+          "https://facebuk-app.onrender.com/api/users/allUsers"
+        );
         setAllUsers(allUserList.data);
         console.log(allUserList, "allUserList");
       } catch (error) {

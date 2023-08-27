@@ -8,6 +8,8 @@ const postsRoute = require("./routes/posts");
 const multer = require("multer");
 const path = require("path");
 const cors = require("cors");
+
+//always keep at the top
 app.use(
   cors({
     origin: "*",
@@ -42,15 +44,6 @@ app.use(express.json());
 app.use("/api/auth", authRoute);
 app.use("/api/users", usersRoute);
 app.use("/api/posts", postsRoute);
-// const corsOpts = {
-//   origin: "*",
-//   credentials: true,
-//   methods: ["GET", "POST", "HEAD", "PUT", "PATCH", "DELETE"],
-//   allowedHeaders: ["Content-Type"],
-//   exposedHeaders: ["Content-Type"],
-// };
-
-// app.use(cors());
 
 app.get("/api", (req, res) => {
   res.status(200).send("hello world");

@@ -1,11 +1,11 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import "./register.css";
 import { Link, useNavigate } from "react-router-dom";
 import { enqueueSnackbar } from "notistack";
 import axiosInstance from "../../services/instance";
 const Register = () => {
   const navigate = useNavigate();
-
+  const [isFetching, setIsFetching] = useState(false);
   const username = useRef();
   const email = useRef();
   const password = useRef();
@@ -33,13 +33,16 @@ const Register = () => {
         password: password.current.value,
       };
       try {
+        setIsFetching(true);
         await axiosInstance.post("/auth/register", user);
         enqueueSnackbar({
           variant: "success",
           message: "You have Successfully Registered",
         });
+        setIsFetching(false);
         navigate("/login");
       } catch (error) {
+        setIsFetching(false);
         console.error(error);
         enqueueSnackbar({
           variant: "error",
@@ -86,8 +89,13 @@ const Register = () => {
             type="password"
             className="registerInput"
           />
-          <button className="registerInput" id="signup" type="submit">
-            Sign Up
+          <button
+            disabled={isFetching}
+            className="registerInput"
+            id="signup"
+            type="submit"
+          >
+            {isFetching ? "Please wait 1 minute...." : "Sign Up"}
           </button>
           <Link style={{ textAlign: "center" }} to="/login">
             Login if Already have an Account

@@ -17,20 +17,26 @@ const TopBar = ({ tempuser }) => {
   const [passwordModal, setPasswordModal] = useState(false);
   const [password, setPassword] = useState("");
   const { user } = useContext(AuthContext);
+  const [loading, setLoading] = useState(false);
 
   const handleLogout = () => {
+    setLoading(true);
     localStorage.removeItem("user");
     navigate("/");
+
     enqueueSnackbar({
       variant: "success",
       message: "you have successfully Logged Out",
     });
+    setLoading(false);
     window.location.reload();
   };
 
   const deleteAccount = async () => {
     try {
       alert("Are you Sure to delete Your Account Permanently??");
+      setLoading(true);
+
       await axiosInstance.delete("/users/" + user._id);
       await axiosInstance.delete("/posts/" + user._id);
       localStorage.removeItem("user");
@@ -40,6 +46,8 @@ const TopBar = ({ tempuser }) => {
         variant: "success",
         message: "you have deleted Permanently",
       });
+      setLoading(false);
+
       window.location.reload();
     } catch (error) {
       // console.error(error);
@@ -51,17 +59,22 @@ const TopBar = ({ tempuser }) => {
   };
   const handleUpdatePassword = async () => {
     if (password != null) {
+      setLoading(true);
       try {
         await axiosInstance.put("/users/" + user._id + "/updatePassword", {
           password,
         });
         setPasswordModal(false);
+        setLoading(false);
+
         enqueueSnackbar({
           variant: "success",
           message: "Password Updated Successfully",
         });
         setPassword("");
       } catch (error) {
+        setLoading(false);
+
         enqueueSnackbar({
           variant: "error",
           message: error,
@@ -71,6 +84,27 @@ const TopBar = ({ tempuser }) => {
   };
   return (
     <>
+      {loading && (
+        <>
+          <div
+            style={{
+              backgroundColor: "green",
+              width: "300px",
+              padding: "10px 20px",
+              position: "absolute",
+              top: 55,
+              right: 0,
+              left: 0,
+              margin: "0px auto",
+              zIndex: 999,
+            }}
+          >
+            <h2 style={{ textAlign: "center", color: "white" }}>
+              Loading Please wait....
+            </h2>
+          </div>
+        </>
+      )}
       <div className="topbarContainer">
         <div className="tobarLeft">
           <Link to="/" style={{ textDecoration: "none" }}>
@@ -172,6 +206,27 @@ const TopBar = ({ tempuser }) => {
       )}
       {passwordModal && (
         <div className="formWrapper">
+          {loading && (
+            <>
+              <div
+                style={{
+                  backgroundColor: "green",
+                  width: "300px",
+                  padding: "10px 20px",
+                  position: "absolute",
+                  top: 55,
+                  right: 0,
+                  left: 0,
+                  margin: "0px auto",
+                  zIndex: 999,
+                }}
+              >
+                <h2 style={{ textAlign: "center", color: "white" }}>
+                  Loading Please wait....
+                </h2>
+              </div>
+            </>
+          )}
           <div
             style={{ display: "flex", flexDirection: "column", margin: "10px" }}
           >
