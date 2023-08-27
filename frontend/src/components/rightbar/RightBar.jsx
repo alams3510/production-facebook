@@ -27,22 +27,17 @@ const RightBar = ({ user }) => {
     };
     fetchFriendlist();
   }, [currentUser._id]);
-  useEffect(
-    () => async () => {
-      console.log("allUserList");
-
+  useEffect(() => {
+    const fetchAllUsers = async () => {
       try {
-        const allUserList = await axios.get(
-          "https://facebuk-app.onrender.com/api/users/allUsers"
-        );
+        const allUserList = await axiosInstance.get("/users/allUsers");
         setAllUsers(allUserList.data);
-        console.log(allUserList, "allUserList");
       } catch (error) {
         console.error(error);
       }
-    },
-    [currentUser._id]
-  );
+    };
+    fetchAllUsers();
+  }, []);
 
   useEffect(() => {
     setFollow(currentUser.followings?.includes(user?._id));
