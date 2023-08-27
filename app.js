@@ -32,14 +32,14 @@ app.get("/api", (req, res) => {
 });
 
 //serving frontend to backend
-// if (process.env.NODE_ENV === "production") {
-//*Set static folder
-app.use(express.static(path.join(__dirname, ".client/build")));
+if (process.env.NODE_ENV === "production") {
+  //*Set static folder
+  app.use(express.static("frontend/build"));
 
-app.get("*", (req, res) =>
-  res.sendFile(path.join(__dirname, ".client/build/index.html"))
-);
-// }
+  app.get("*", (req, res) =>
+    res.sendFile(path.resolve(__dirname, "frontend", "build", "index.html"))
+  );
+}
 //uploading an image
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
