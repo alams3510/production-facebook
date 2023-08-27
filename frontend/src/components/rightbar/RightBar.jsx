@@ -26,6 +26,20 @@ const RightBar = ({ user }) => {
     };
     fetchFriendlist();
   }, [currentUser._id]);
+  useEffect(
+    () => async () => {
+      console.log("allUserList");
+
+      try {
+        const allUserList = await axiosInstance.get("/users/allUsers");
+        setAllUsers(allUserList.data);
+        console.log(allUserList, "allUserList");
+      } catch (error) {
+        console.error(error);
+      }
+    },
+    [currentUser._id]
+  );
 
   useEffect(() => {
     setFollow(currentUser.followings?.includes(user?._id));
@@ -60,18 +74,7 @@ const RightBar = ({ user }) => {
     }
     setFollow(!follow);
   };
-  useEffect(
-    () => async () => {
-      try {
-        const allUserList = await axiosInstance.get("/users/allUsers");
-        setAllUsers(allUserList.data);
-        console.log(allUserList, "allUserList");
-      } catch (error) {
-        console.error(error);
-      }
-    },
-    [currentUser._id]
-  );
+
   const HomeRightBar = () => {
     return (
       <div className="rightbarContainer">

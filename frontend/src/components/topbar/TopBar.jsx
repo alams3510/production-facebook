@@ -20,7 +20,7 @@ const TopBar = ({ tempuser }) => {
 
   const handleLogout = () => {
     localStorage.removeItem("user");
-    navigate("/register");
+    navigate("/");
     enqueueSnackbar({
       variant: "success",
       message: "you have successfully Logged Out",
@@ -34,7 +34,7 @@ const TopBar = ({ tempuser }) => {
       await axiosInstance.delete("/users/" + user._id);
       await axiosInstance.delete("/posts/" + user._id);
       localStorage.removeItem("user");
-      navigate("/register");
+      navigate("/");
       // window.location.reload();
       enqueueSnackbar({
         variant: "success",
