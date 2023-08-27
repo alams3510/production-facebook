@@ -8,6 +8,23 @@ const postsRoute = require("./routes/posts");
 const multer = require("multer");
 const path = require("path");
 const cors = require("cors");
+app.use(
+  cors({
+    origin: "*",
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "HEAD", "OPTIONS"],
+    allowedHeaders: [
+      "Content-Type",
+      "Origin",
+      "X-Requested-With",
+      "Accept",
+      "x-client-key",
+      "x-client-token",
+      "x-client-secret",
+      "Authorization",
+    ],
+    credentials: true,
+  })
+);
 
 dotenv.config();
 //connection with mongoDB Atlas
@@ -25,14 +42,14 @@ app.use(express.json());
 app.use("/api/auth", authRoute);
 app.use("/api/users", usersRoute);
 app.use("/api/posts", postsRoute);
-const corsOpts = {
-  origin: "*",
-  credentials: true,
-  methods: ["GET", "POST", "HEAD", "PUT", "PATCH", "DELETE"],
-  allowedHeaders: ["Content-Type"],
-  exposedHeaders: ["Content-Type"],
-};
-app.use(cors(corsOpts));
+// const corsOpts = {
+//   origin: "*",
+//   credentials: true,
+//   methods: ["GET", "POST", "HEAD", "PUT", "PATCH", "DELETE"],
+//   allowedHeaders: ["Content-Type"],
+//   exposedHeaders: ["Content-Type"],
+// };
+
 // app.use(cors());
 
 app.get("/api", (req, res) => {
