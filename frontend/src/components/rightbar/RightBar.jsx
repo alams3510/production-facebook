@@ -62,10 +62,15 @@ const RightBar = ({ user }) => {
   };
   useEffect(
     () => async () => {
-      const allUserList = await axiosInstance.get("/users/allUsers");
-      setAllUsers(allUserList.data);
+      try {
+        const allUserList = await axiosInstance.get("/users/allUsers");
+        setAllUsers(allUserList.data);
+        console.log(allUserList, "allUserList");
+      } catch (error) {
+        console.error(error);
+      }
     },
-    []
+    [currentUser._id]
   );
   const HomeRightBar = () => {
     return (

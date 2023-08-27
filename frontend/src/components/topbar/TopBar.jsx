@@ -21,11 +21,11 @@ const TopBar = ({ tempuser }) => {
   const handleLogout = () => {
     localStorage.removeItem("user");
     navigate("/register");
-    // window.location.reload();
     enqueueSnackbar({
       variant: "success",
       message: "you have successfully Logged Out",
     });
+    window.location.reload();
   };
 
   const deleteAccount = async () => {
@@ -40,6 +40,7 @@ const TopBar = ({ tempuser }) => {
         variant: "success",
         message: "you have deleted Permanently",
       });
+      window.location.reload();
     } catch (error) {
       // console.error(error);
       enqueueSnackbar({
