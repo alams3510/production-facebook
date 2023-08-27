@@ -4,8 +4,8 @@
 }
 @media only screen and (max-width: 600px) {
 .feedContainer {
-    flex: 6;
-    padding: 15px;
+    flex: 5.5;
+    padding: 0px;
   }
 
 }

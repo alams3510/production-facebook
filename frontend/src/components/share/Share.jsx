@@ -12,7 +12,7 @@ import { useState } from "react";
 import axiosInstance from "../../services/instance";
 
 const Share = () => {
-  const { user } = useContext(AuthContext);
+  const { user, loader, dispatch } = useContext(AuthContext);
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
   const desc = useRef();
 
@@ -31,15 +31,22 @@ const Share = () => {
       data.append("file", file);
       newpost.img = fileName;
       try {
+        dispatch({ type: "LOADER", payload: true });
         await axiosInstance.post("/upload", data);
       } catch (error) {
+        dispatch({ type: "LOADER", payload: false });
         console.error(error);
       }
     }
     try {
+      dispatch({ type: "LOADER", payload: true });
       await axiosInstance.post("/posts", newpost);
+      dispatch({ type: "LOADER", payload: false });
+
       window.location.reload();
     } catch (error) {
+      dispatch({ type: "LOADER", payload: false });
+
       console.error(error);
     }
   };
@@ -110,7 +117,7 @@ const Share = () => {
             </div>
           </div>
           <div className="shareBtn">
-            <button className="sbtn" type="submit">
+            <button disabled={loader} className="sbtn" type="submit">
               share
             </button>
           </div>

@@ -8,7 +8,7 @@ import { useContext } from "react";
 import { AuthContext } from "../../context/AuthContext";
 
 const Post = ({ posts }) => {
-  const { user: currentUser } = useContext(AuthContext);
+  const { user: currentUser, dispatch } = useContext(AuthContext);
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
   const [user, setUser] = useState([]);
   const [like, setLike] = useState(posts.likes.length);
@@ -27,10 +27,13 @@ const Post = ({ posts }) => {
 
   const likehandler = async () => {
     try {
+      dispatch({ type: "LOADER", type: true });
       await axiosInstance.put("/posts/" + posts._id + "/like", {
         userId: currentUser._id,
       });
+      dispatch({ type: "LOADER", type: false });
     } catch (error) {
+      dispatch({ type: "LOADER", type: false });
       console.error(error);
     }
     setLike(isliked ? like - 1 : like + 1);
@@ -41,9 +44,15 @@ const Post = ({ posts }) => {
   const deletepost = async (id, userId) => {
     if (userId === currentUser._id) {
       try {
+        dispatch({ type: "LOADER", type: true });
+
         await axiosInstance.delete(`/posts/${id}`);
+        dispatch({ type: "LOADER", type: false });
+
         window.location.reload(true);
       } catch (error) {
+        dispatch({ type: "LOADER", type: false });
+
         console.error(error);
       }
     }
