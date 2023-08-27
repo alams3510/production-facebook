@@ -21,7 +21,7 @@ const TopBar = ({ tempuser }) => {
   const handleLogout = () => {
     localStorage.removeItem("user");
     navigate("/register");
-    window.location.reload();
+    // window.location.reload();
     enqueueSnackbar({
       variant: "success",
       message: "you have successfully Logged Out",
@@ -35,7 +35,7 @@ const TopBar = ({ tempuser }) => {
       await axiosInstance.delete("/posts/" + user._id);
       localStorage.removeItem("user");
       navigate("/register");
-      window.location.reload();
+      // window.location.reload();
       enqueueSnackbar({
         variant: "success",
         message: "you have deleted Permanently",
