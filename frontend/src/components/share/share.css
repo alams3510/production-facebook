@@ -216,5 +216,21 @@
 .uploadText {
     font-size: 12px;
   }
-    
+         .photoUpload {
+           display: flex;
+           margin-right: 5px;
+           align-content: center;
+           cursor: pointer;
+         }
+         .shareBtn button{
+          width: 40px;
+          font-size: 12px;
+         }
+                 .shareDown {
+                   display: flex;
+                   align-items: center;
+                   justify-content: center;
+                   width: 100%;
+                   margin: 15px auto;
+                 }
 }
