@@ -29,7 +29,7 @@ const Register = () => {
       });
     } else {
       const user = {
-        username: username.current.value,
+        username: username.current.value.trim(),
         email: email.current.value,
         password: password.current.value,
       };

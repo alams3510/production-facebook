@@ -9,7 +9,7 @@ import axiosInstance from "../../services/instance";
 
 const Profile = () => {
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
-  const username = useParams().username;
+  const username = useParams().username.trim();
 
   const [user, setUser] = useState([]);
   const fetchUser = async () => {
