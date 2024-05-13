@@ -7,7 +7,7 @@ import { useContext } from "react";
 import { AuthContext } from "../../context/AuthContext";
 import axiosInstance from "../../services/instance";
 
-const Feed = ({ username }) => {
+const Feed = ({ username, postUpdateLike }) => {
   const { user } = useContext(AuthContext);
   const [posts, setPosts] = useState([]);
   const [isfetching, setIsfetching] = useState(false);
@@ -36,12 +36,18 @@ const Feed = ({ username }) => {
       {username ? "" : <Share />}
       {posts.length > 0 ? (
         posts.map((posts) => {
-          return <Post posts={posts} key={posts._id} />;
+          return (
+            <Post
+              posts={posts}
+              key={posts._id}
+              postUpdateLike={postUpdateLike}
+            />
+          );
         })
       ) : (
-        <h1 style={{ textAlign: "center", color: "grey", marginTop: "20px" }}>
-          {isfetching ? "Loading...." : "You have No post yet"}
-        </h1>
+        <h5 style={{ textAlign: "center", color: "grey", marginTop: "20px" }}>
+          {isfetching ? "" : "You have No post yet"}
+        </h5>
       )}
     </div>
   );

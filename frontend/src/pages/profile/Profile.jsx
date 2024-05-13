@@ -12,11 +12,11 @@ const Profile = () => {
   const username = useParams().username;
 
   const [user, setUser] = useState([]);
+  const fetchUser = async () => {
+    const res = await axiosInstance.get(`/users?username=${username}`);
+    setUser(res.data);
+  };
   useEffect(() => {
-    const fetchUser = async () => {
-      const res = await axiosInstance.get(`/users?username=${username}`);
-      setUser(res.data);
-    };
     fetchUser();
   }, [username]);
   return (

@@ -18,6 +18,8 @@ const INITIALSTATE = {
   error: false,
   isupdate: null,
   loader: false,
+  message: [],
+  chatSelectedUser: {},
 };
 export const AuthContext = createContext(INITIALSTATE);
 
@@ -34,6 +36,8 @@ const AuthContextProvider = ({ children }) => {
         isFetching: state.isFetching,
         error: state.error,
         loader: state.loader,
+        message: state.message,
+        chatSelectedUser: state.chatSelectedUser,
         dispatch,
       }}
     >

@@ -5,10 +5,19 @@ const dotenv = require("dotenv");
 const authRoute = require("./routes/auth");
 const usersRoute = require("./routes/users");
 const postsRoute = require("./routes/posts");
+const msgRoute = require("./routes/msg");
 const multer = require("multer");
 const path = require("path");
 const cors = require("cors");
+const http = require("http");
+let server = http.createServer(app);
+const socketIO = require("socket.io");
+var io = socketIO(server, { cors: { origin: "*" } });
 
+app.use((req, res, next) => {
+  req.io = io;
+  return next();
+});
 //always keep at the top
 app.use(
   cors({
@@ -28,6 +37,11 @@ app.use(
   })
 );
 
+//socket connection with client side
+
+io.on("connection", (socket) => {
+  console.log("New user connected with cliend Id" + socket.id);
+});
 dotenv.config();
 //connection with mongoDB Atlas
 mongoose.connect(
@@ -44,6 +58,7 @@ app.use(express.json());
 app.use("/api/auth", authRoute);
 app.use("/api/users", usersRoute);
 app.use("/api/posts", postsRoute);
+app.use("/api/msg", msgRoute);
 
 app.get("/api", (req, res) => {
   res.status(200).send("hello world");
@@ -86,6 +101,6 @@ app.use((req, res, next) => {
   );
   next();
 });
-app.listen(port, () => {
+server.listen(port, () => {
   console.log("Backend server is running! on port number " + port);
 });

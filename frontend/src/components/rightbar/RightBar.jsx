@@ -9,25 +9,20 @@ import axiosInstance from "../../services/instance";
 
 const RightBar = ({ user }) => {
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
-  const { user: currentUser, dispatch, loader } = useContext(AuthContext);
+  const { user: currentUser, dispatch } = useContext(AuthContext);
   const [friend, setFriend] = useState([]);
   const [allUsers, setAllUsers] = useState([]);
   const [follow, setFollow] = useState(false);
-  // const [loading, setLoading] = useState(false);
-
   useEffect(() => {
     const fetchFriendlist = async () => {
       try {
         dispatch({ type: "LOADER", payload: true });
-        // setLoading(true);
         const friendList = await axiosInstance.get(
           "/users/friends/" + currentUser?._id
         );
         setFriend(friendList.data);
-        // setLoading(false);
         dispatch({ type: "LOADER", payload: false });
       } catch (error) {
-        // setLoading(false);
         dispatch({ type: "LOADER", payload: false });
 
         console.error(error);
@@ -38,16 +33,9 @@ const RightBar = ({ user }) => {
   useEffect(() => {
     const fetchAllUsers = async () => {
       try {
-        // setLoading(true);
-        dispatch({ type: "LOADER", payload: true });
-
         const allUserList = await axiosInstance.get("/users/allUsers");
         setAllUsers(allUserList.data);
-        // setLoading(false);
-        dispatch({ type: "LOADER", payload: false });
       } catch (error) {
-        // setLoading(false);
-        dispatch({ type: "LOADER", payload: false });
         console.error(error);
       }
     };
@@ -61,26 +49,24 @@ const RightBar = ({ user }) => {
   const handleFollow = async () => {
     try {
       if (!follow) {
-        // setLoading(true);
         dispatch({ type: "LOADER", payload: true });
         await axiosInstance.put("/users/" + user._id + "/follow", {
           userId: currentUser._id,
+          username: currentUser.username,
         });
         dispatch({ type: "FOLLOW", payload: user._id });
-        // setLoading(false);
         dispatch({ type: "LOADER", payload: false });
         enqueueSnackbar({
           variant: "success",
           message: "You have started following " + user.username,
         });
       } else {
-        // setLoading(true);
         dispatch({ type: "LOADER", payload: true });
         await axiosInstance.put("/users/" + user._id + "/unfollow", {
           userId: currentUser._id,
+          username: currentUser.username,
         });
         dispatch({ type: "UNFOLLOW", payload: user._id });
-        // setLoading(false);
         dispatch({ type: "LOADER", payload: false });
 
         enqueueSnackbar({
@@ -89,7 +75,6 @@ const RightBar = ({ user }) => {
         });
       }
     } catch (error) {
-      // setLoading(false);
       dispatch({ type: "LOADER", payload: false });
       enqueueSnackbar({
         variant: "warning",
@@ -123,10 +108,11 @@ const RightBar = ({ user }) => {
                 .filter((val) => val.username !== currentUser.username)
                 .map((friend) => {
                   return (
-                    <div className="friends">
+                    <div className="friends" key={friend._id}>
                       <NavLink
-                        activeClassName="active"
-                        key={friend._id}
+                        className={({ isActive }) =>
+                          isActive ? "active " : ""
+                        }
                         to={"/profile/" + friend.username}
                       >
                         <div className="online">
@@ -145,9 +131,9 @@ const RightBar = ({ user }) => {
                       </NavLink>
 
                       <NavLink
-                        activeClassName="active"
-                        className="onlineName"
-                        key={friend._id}
+                        className={({ isActive }) =>
+                          isActive ? "active onlineName" : "onlineName"
+                        }
                         to={"/profile/" + friend.username}
                       >
                         {friend.username}
@@ -171,7 +157,6 @@ const RightBar = ({ user }) => {
       </div>
     );
   };
-
   const ProfileRightBar = () => {
     return (
       <div className="profileContainer">
@@ -200,32 +185,25 @@ const RightBar = ({ user }) => {
               <b>From</b> {user.from}
             </span>
             <span>
-              <b>RelationShip</b>{" "}
+              <b>RelationShip</b>
               {user.relationship === 1
-                ? "Single"
+                ? " Single"
                 : user.relationship === 2
-                ? "Married"
+                ? " Married"
                 : ""}
             </span>
           </div>
           <div className="userFriends">
-            <h2>
-              {currentUser.username !== user.username ? user.username : "My"}{" "}
+            <p className="fw-bold">
+              {currentUser.username !== user.username
+                ? user.username + " "
+                : "My "}
               Friends
-            </h2>
-            <div style={{ display: "flex", flexWrap: "wrap" }}>
+            </p>
+            <div className="freindList">
               {friend.map((friend) => {
                 return (
-                  <div
-                    key={friend._id}
-                    style={{
-                      width: "120px",
-                      margin: "5px",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                    }}
-                  >
+                  <div key={friend._id} className="freindImgList">
                     <Link to={"/profile/" + friend.username}>
                       <img
                         src={

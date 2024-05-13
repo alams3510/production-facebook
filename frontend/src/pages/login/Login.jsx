@@ -1,9 +1,10 @@
-import "./login.css";
+// import "./login.css";
 import { useRef } from "react";
 import { useContext } from "react";
 import { AuthContext } from "../../context/AuthContext";
 import loginCalls from "../../apiCalls";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import "../register/register.css";
 
 const Login = () => {
   const { isFetching, dispatch } = useContext(AuthContext);
@@ -18,12 +19,11 @@ const Login = () => {
     );
   };
 
-  const navigate = useNavigate();
   return (
     <div className="registerContainer">
       <div className="registerWrapper">
         <div className="textRegister">
-          <span className="texts">facebook</span>
+          <span className="texts">Facebook</span>
           <span className="desc">connect with friends and people</span>
         </div>
 
@@ -33,7 +33,7 @@ const Login = () => {
             required
             placeholder="Email"
             type="email"
-            className="registerInputs"
+            className="registerInput"
           />
           <input
             required
@@ -41,31 +41,23 @@ const Login = () => {
             minLength="6"
             placeholder="Password"
             type="password"
-            className="registerInputs"
+            className="registerInput"
           />
           <button
             type="submit"
             disabled={isFetching}
-            className="registerInputs"
+            className="registerInput"
             id="signup"
           >
             {isFetching ? "loading..." : "Log In"}
           </button>
 
-          <span className="link">Forgot Password</span>
-
-          <button
-            style={{
-              fontSize: "15px",
-              border: "none",
-              outline: "none",
-              padding: "5px 10px",
-            }}
-            id="loginto"
-            onClick={() => navigate("/register")}
-          >
-            Create a New account
-          </button>
+          <div className="bottom-link">
+            <span className="link">Forgot Password</span>
+            <Link className="link" to="/register">
+              Create a New account
+            </Link>
+          </div>
         </form>
       </div>
     </div>

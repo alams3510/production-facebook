@@ -1,0 +1,188 @@
+body{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+.msg-main-containers {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+}
+.msg-list{
+    list-style-type: none;
+    width: 90%;
+}
+.msgImg{
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    
+}
+.msg-container{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+gap: 5px;
+flex-wrap: wrap;
+}
+.reciever{
+    display: flex;
+    align-self: end;
+    background-color: rgb(177, 235, 180);
+    color: black;
+    padding: 10px;
+    font-family: sans-serif;
+    max-width: 50%;
+    border-radius: 10px 0 0 10px;
+}
+.sender {
+    display: flex;
+    align-self: start;
+    background-color: rgb(96, 123, 96);
+    color: white;
+    padding: 10px;
+    font-family: sans-serif;
+    max-width: 50%;
+    border-radius: 0 10px 10px 0;
+}
+
+.new-message{
+background-color: green;
+color: green;
+width: 10px;
+height: 10px;
+border-radius: 50%;
+border: 2px solid white;
+animation: popping 2s infinite ;
+
+}
+.sender-chat{
+    position: sticky;
+    top: 50px;
+    width: 100%;
+    height: 30px;
+    padding: 20px;
+    background-color: burlywood;
+ /* background-color: whitesmoke; */
+    display: flex;
+    align-items: center;
+    /* justify-content: start; */
+}
+.delete-msg{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    cursor: pointer;
+    background-color: rgb(177, 235, 180);
+        border: 1px solid rgb(251, 148, 148);
+}
+.delete-msg:hover{
+    background-color: rgb(102, 135, 135);
+}
+.bottom-input{
+display: flex;
+justify-content: center;
+align-self: center;
+gap: 2;
+position: fixed;
+bottom: 5px;
+width: 95%;
+
+}
+.cursor{
+    cursor: pointer;
+}
+.bottom-input input{
+    color: gray;
+    background-color: whitesmoke;
+        outline: 2px solid rgb(151, 164, 237);
+    margin-right: 5px;
+    border-radius: 10px;
+}
+.chat-freinds{
+    margin: 0 auto;
+}
+
+@keyframes popping {
+    0% {
+            background-color: red;
+            transform: scale(0.3);
+        }
+    
+        25% {
+            background-color: yellow;
+            transform: scale(0.5);
+        }
+    
+        50% {
+            background-color: red;
+            transform: scale(0.8);
+        }
+    
+        100% {
+            background-color: green;
+            transform: scale(1);
+        }
+
+}
+
+@media only screen and (min-width: 600px) {
+    .sender {
+        display: flex;
+        align-self: start;
+        padding-left: 30%;
+        /* max-width: 50%; */
+    }
+
+    .reciever {
+        display: flex;
+        align-self: end;
+        padding-right: 30%;
+        /* max-width: 50%; */
+    }
+
+
+}
+@media only screen and (max-width: 600px) {
+    .msg-main-containers {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+        }
+    .sender-chat {
+        position: sticky;
+        top: 40px;
+        width: 100%;
+        height: 30px;
+        padding: 20px;
+        background-color: whitesmoke;
+        display: flex;
+        align-items: center;
+        justify-content: start;
+        font-size: small;
+    }
+        .msg-list {
+            display: flex;
+            align-items: center;
+            list-style-type: none;
+            height: 40px;
+            padding: 5px;
+        }
+                .msgImg {
+                    width: 25px;
+                    height: 25px;
+                    border-radius: 50%;
+        
+                }
+        
+               
+}

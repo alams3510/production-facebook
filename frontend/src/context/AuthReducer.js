@@ -39,12 +39,22 @@ const AuthReducer = (state, action) => {
     case "DETAILS_UPDATED":
       return {
         ...state,
-        user: action.payload,
+        user: { ...state.user, ...action.payload },
       };
     case "LOADER":
       return {
         ...state,
         loader: action.payload,
+      };
+    case "SENDER_MSG":
+      return {
+        ...state,
+        message: action.payload,
+      };
+    case "CHAT_SELECTED":
+      return {
+        ...state,
+        chatSelectedUser: action.payload,
       };
     default:
       return state;

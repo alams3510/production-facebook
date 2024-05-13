@@ -13,11 +13,16 @@ import {
 } from "react-icons/bs";
 import { GrGroup } from "react-icons/gr";
 const SideBar = () => {
-  const PF=process.env.REACT_APP_PUBLIC_FOLDER;
+  const PF = process.env.REACT_APP_PUBLIC_FOLDER;
   return (
     <div className="sidebarContainer">
       <div className="sidebarWrapper">
-        <ul className="sidebarList">
+        <ul
+          className="sidebarList"
+          data-toggle="tooltip"
+          data-placement="left"
+          title="Demo files"
+        >
           <li className="sidebarItem">
             <MdOutlineRssFeed className="sidebarIcon" />
             <span className="sidebarListItemText">Feed</span>
@@ -60,7 +65,7 @@ const SideBar = () => {
         </div>
         <hr className="hrLine" />
         <div className="sidebarFriends">
-          <img src={PF+"person/4.jpeg"} alt="img" className="sidebarImg" />
+          <img src={PF + "person/4.jpeg"} alt="img" className="sidebarImg" />
           <span className="sidebarName">fake name</span>
         </div>
       </div>

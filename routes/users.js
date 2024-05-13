@@ -1,5 +1,7 @@
 const router = require("express").Router();
 const User = require("../models/User");
+const Post = require("../models/Post");
+const Msg = require("../models/Msg");
 const bcrypt = require("bcrypt");
 
 //updating the user details
@@ -14,10 +16,14 @@ router.put("/:id", async (req, res) => {
       }
     }
     try {
-      const updatedData = await User.findByIdAndUpdate(req.params.id, {
-        $set: req.body,
-      });
-      res.status(200).json("user updated successfully");
+      const updatedData = await User.findByIdAndUpdate(
+        req.params.id,
+        {
+          $set: req.body,
+        },
+        { new: true }
+      );
+      res.status(200).json(updatedData);
     } catch (error) {
       res.status(400).json(error);
     }
@@ -28,35 +34,49 @@ router.put("/:id", async (req, res) => {
 //updating the user password
 
 router.put("/:id/updatePassword", async (req, res) => {
-  if (req.body.password) {
-    try {
-      const salt = await bcrypt.genSalt(10);
-      updatedPassword = await bcrypt.hash(req.body.password, salt);
-      const updatedData = await User.updateOne(
-        { _id: req.params.id },
-        { $set: { password: updatedPassword } }
-      );
+  const userId = req.params.id;
+  const user = await User.findOne({ _id: userId });
+  if (!user) {
+    return res.status(400).json("User not Found");
+  }
+  const { newPassword, oldPassword } = req.body.passwords;
+  const validPassword = await bcrypt.compare(oldPassword, user.password);
 
-      res.status(200).json("password updated successfully");
-    } catch (error) {
-      res.status(400).json(error);
-    }
+  if (!validPassword) {
+    return res.status(400).json("Old Password Not Matched");
+  }
+  try {
+    const salt = await bcrypt.genSalt(10);
+    const updatedPassword = await bcrypt.hash(newPassword, salt);
+    await User.updateOne(
+      { _id: req.params.id },
+      { $set: { password: updatedPassword } }
+    );
+
+    res.status(200).json("password updated successfully");
+  } catch (error) {
+    res.status(400).json(error);
   }
 });
 
 //deleting the user Account
 
 router.delete("/:id", async (req, res) => {
-  // if (req.body.userId === req.params.id) {
+  const userId = req.params.id;
   try {
-    await User.findByIdAndDelete(req.params.id);
-    res.status(200).json("user deleted");
+    const idsList = await Msg.aggregate([
+      {
+        $match: { $or: [{ senderId: userId }, { recieverId: userId }] },
+      },
+      { $group: { _id: "$_id" } },
+    ]);
+    await Msg.remove({ _id: { $in: idsList } });
+    await Post.deleteMany({ userId });
+    await User.findByIdAndDelete(userId);
+    res.status(200).json("User deleted");
   } catch (error) {
     res.status().json(error);
   }
-  // } else {
-  //   res.status(400).json("you can only delete your account");
-  // }
 });
 
 //get a single user
@@ -79,10 +99,10 @@ router.get("/", async (req, res) => {
 
 router.get("/friends/:id", async (req, res) => {
   try {
-    const user = await User.findById(req.params.id);
+    const user = await User.findOne({ _id: req.params.id });
     const friends = await Promise.all(
       user.followings.map((friendsId) => {
-        return User.findById(friendsId);
+        return User.findOne({ _id: friendsId });
       })
     );
     let friendList = [];
@@ -106,7 +126,11 @@ router.put("/:id/follow", async (req, res) => {
       if (!user.followers.includes(req.body.userId)) {
         await user.updateOne({ $push: { followers: req.body.userId } });
         await currentUser.updateOne({ $push: { followings: req.params.id } });
-        res.status(200).json("user is followed now");
+        req.io.emit("follow", {
+          follower: req.body,
+          followed: user,
+        });
+        return res.status(200).json("user is followed now");
       } else {
         res.status(200).json("you already following him");
       }
@@ -128,6 +152,10 @@ router.put("/:id/unfollow", async (req, res) => {
       if (user.followers.includes(req.body.userId)) {
         await user.updateOne({ $pull: { followers: req.body.userId } });
         await currentUser.updateOne({ $pull: { followings: req.params.id } });
+        req.io.emit("unfollow", {
+          follower: req.body,
+          followed: user,
+        });
         res.status(200).json("user is unfollowed now");
       } else {
         res.status(200).json("you already unfollowed now");

@@ -6,18 +6,21 @@ import { format } from "timeago.js";
 import { Link } from "react-router-dom";
 import { useContext } from "react";
 import { AuthContext } from "../../context/AuthContext";
+import { enqueueSnackbar } from "notistack";
 
-const Post = ({ posts }) => {
+const Post = ({ posts, postUpdateLike }) => {
   const { user: currentUser, dispatch } = useContext(AuthContext);
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
   const [user, setUser] = useState([]);
-  const [like, setLike] = useState(posts.likes.length);
+  const [like, setLike] = useState(posts.likes.length || 0);
   const [isliked, setisLiked] = useState(false);
+
+  const fetchUser = async () => {
+    const res = await axiosInstance.get(`/users?userId=${posts.userId}`);
+    setUser(res.data);
+  };
+
   useEffect(() => {
-    const fetchUser = async () => {
-      const res = await axiosInstance.get(`/users?userId=${posts.userId}`);
-      setUser(res.data);
-    };
     fetchUser();
   }, [posts.userId]);
 
@@ -40,21 +43,36 @@ const Post = ({ posts }) => {
     setisLiked(!isliked);
   };
 
+  const liky = () => {
+    setLike(isliked ? like - 1 : like + 1);
+    setisLiked(!isliked);
+  };
+
+  useEffect(() => {
+    if (postUpdateLike) return liky();
+  }, [postUpdateLike]);
+
   const [visible, setVisible] = useState(false);
-  const deletepost = async (id, userId) => {
+  const deletepost = async (postId, userId) => {
     if (userId === currentUser._id) {
       try {
         dispatch({ type: "LOADER", type: true });
-
-        await axiosInstance.delete(`/posts/${id}`);
+        await axiosInstance.delete(`/posts/${postId}`);
         dispatch({ type: "LOADER", type: false });
-
-        window.location.reload(true);
+        enqueueSnackbar({
+          variant: "success",
+          message: "Your Post Deleted Successfully",
+        });
+        return window.location.reload(true);
       } catch (error) {
         dispatch({ type: "LOADER", type: false });
-
         console.error(error);
       }
+    } else {
+      return enqueueSnackbar({
+        variant: "error",
+        message: "You can not delete Others Posts",
+      });
     }
   };
 
@@ -77,23 +95,18 @@ const Post = ({ posts }) => {
               </Link>
               <span className="postName">{user.username}</span>
               <span className="postDate">{format(posts.createdAt)}</span>
-              {/* <span className="postDate">
-                {moment(posts.createdAt, "YYYYMMDD").fromNow() === "a day ago"
-                  ? moment(new Date(posts.createdAt), "hour").fromNow()
-                  : moment(posts.createdAt, "YYYYMMDD").fromNow()}
-              </span> */}
             </div>
 
             <div className="postTopRight">
               {visible && (
                 <ul className="updatepost">
-                  <li
+                  <button
                     onClick={() => {
                       deletepost(posts._id, posts.userId);
                     }}
                   >
                     delete
-                  </li>
+                  </button>
                 </ul>
               )}
               <div>

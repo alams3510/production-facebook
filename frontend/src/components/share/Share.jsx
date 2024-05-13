@@ -115,11 +115,15 @@ const Share = () => {
               <MdEmojiEmotions id="feel" className="shareIcon" />
               <span className="uploadText">Feelings</span>
             </div>
-          </div>
-          <div className="shareBtn">
-            <button disabled={loader} className="sbtn" type="submit">
-              share
-            </button>
+            <div className="shareBtn">
+              <button
+                disabled={loader}
+                className="sbtn btn btn-sm"
+                type="submit"
+              >
+                share
+              </button>
+            </div>
           </div>
         </form>
       </div>

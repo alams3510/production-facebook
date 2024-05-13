@@ -1,5 +1,5 @@
 .topbarContainer {
-  width: 100%;
+  width: 100vw;
   height: 50px;
   background-color: #1877f2;
   color: white;
@@ -23,7 +23,7 @@
   flex: 5;
 }
 .searchBar {
-  width: 100%;
+  width: 90%;
   background-color: white;
   border-radius: 20px;
   display: flex;
@@ -61,7 +61,9 @@
   font-weight: 700;
 }
 .active{
-color: rgb(43, 244, 60);
+text-decoration: underline;
+color: white;
+  font-weight: 900;
 }
 
 Link{
@@ -78,7 +80,7 @@ text-decoration: none;
   position: relative;
 }
 .icon:hover{
-color: rgb(43, 244, 60);
+color: rgb(198, 243, 198);
 }
 .num {
   background-color: red;
@@ -144,11 +146,37 @@ text-align: center;
   background-color: rgb(143, 140, 140);
 }
 
+.noti-dropdown{
+  position: absolute;
+  top: 20px;
+  right: 15px;
+padding: 0;
+background-color: white;
+font-size: 16px;
+/* background-color: rgb(158, 243, 158); */
+background-color: rgb(232, 241, 232);
+
+}
+.noti-dropdown li{
+list-style: none;
+
+}
+.noti-dropdown li:hover {
+background-color: antiquewhite;
+}
+
+.noti-dropdown li a{
+  color: black;
+  font-weight: 700;
+}
+
+
 @media only screen and (max-width: 600px) {
 
 .topbarContainer {
-    width: 140%;
-    height: 50px;
+  padding: 20px;
+    width: 100vw;
+    height: 40px;
     background-color: #1877f2;
     color: white;
     display: flex;
@@ -157,17 +185,22 @@ text-align: center;
     top: 0;
     z-index: 99;
   }
+  body{
+    display: flex;
+    width: 100%;
+  }
 
   .tobarLeft {
     flex: 3;
   }
 
   .logo {
-    margin-left: 20px;
+    margin-left: 0px;
     font-weight: 900;
-    font-size: 30px;
+    font-size: 20px;
     color: white;
     cursor: pointer;
+    margin-right: 5px;
   }
 
   .topbarMid {
@@ -176,7 +209,7 @@ text-align: center;
   }
 
   .searchBar {
-    width: 100%;
+    width: 90%;
     background-color: white;
     border-radius: 20px;
     display: flex;
@@ -199,7 +232,7 @@ text-align: center;
   }
 
   .topRight {
-    flex: 7;
+    flex: 4;
   }
 
   .topRightwrapper {
@@ -214,7 +247,7 @@ text-align: center;
 
   .text {
     margin-right: 10px;
-    font-size: 14px;
+    font-size: 12px;
     cursor: pointer;
     text-decoration: none;
     color: white;
@@ -233,7 +266,7 @@ text-align: center;
     display: flex;
     margin-right: 15px;
     cursor: pointer;
-    font-size: 20px;
+    font-size: 15px;
     position: relative;
   }
 
@@ -259,8 +292,8 @@ text-align: center;
   }
 
   .profileImgbar {
-    width: 40px;
-    height: 40px;
+    width: 30px;
+    height: 30px;
     border-radius: 50%;
     object-fit: cover;
     cursor: pointer;
@@ -307,13 +340,22 @@ text-align: center;
     height: 100vh;
     background-color: rgb(143, 140, 140);
   }
-
+    .noti-dropdown {
+      position: absolute;
+      top: 20px;
+      right: 5px;
+      padding: 0;
+      font-size: 12px;
+    }
+.noti-dropdown li a {
+  font-size: 12px;
+}
 }
 @media only screen and (max-width: 350px) {
 
   .topbarContainer {
-    width: 140%;
-    height: 50px;
+    width: 100vw;
+    height: 40px;
     background-color: #1877f2;
     color: white;
     display: flex;
@@ -325,13 +367,13 @@ text-align: center;
   }
 
   .tobarLeft {
-    flex: 3;
+    flex: 2;
   }
 
   .logo {
-    margin-left: 10px;
+    margin-left: 5px;
     font-weight: 900;
-    font-size: 30px;
+    font-size: 15px;
     color: white;
     cursor: pointer;
   }
@@ -342,7 +384,7 @@ text-align: center;
   }
 
   .searchBar {
-    width: 100%;
+    width: 80%;
     background-color: white;
     border-radius: 20px;
     display: flex;
@@ -365,7 +407,7 @@ text-align: center;
   }
 
   .topRight {
-    flex: 9;
+    flex: 5;
   }
 
   .topRightwrapper {
@@ -381,7 +423,7 @@ text-align: center;
 
   .text {
     margin-right: 10px;
-    font-size: 14px;
+    font-size: 10px;
     cursor: pointer;
     text-decoration: none;
     color: white;

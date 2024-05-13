@@ -19,11 +19,11 @@
     font-weight: 500;
 }
 .rowAlign input,select{
-    height: 20px;
+    height: 30px;
     width: 60%;
 }
 .rowAlign select {
-    height: 20px;
+    height: 30px;
     width: 40%;
 }
 .rowAlign button{

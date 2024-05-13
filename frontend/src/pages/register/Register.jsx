@@ -3,6 +3,7 @@ import "./register.css";
 import { Link, useNavigate } from "react-router-dom";
 import { enqueueSnackbar } from "notistack";
 import axiosInstance from "../../services/instance";
+
 const Register = () => {
   const navigate = useNavigate();
   const [isFetching, setIsFetching] = useState(false);
@@ -56,7 +57,7 @@ const Register = () => {
     <div className="registerContainer">
       <div className="registerWrapper">
         <div className="textRegister">
-          <span className="texts">facebook</span>
+          <span className="texts">Facebook</span>
           <span className="desc">connect with friends and people</span>
         </div>
 
@@ -97,7 +98,7 @@ const Register = () => {
           >
             {isFetching ? "Please wait 1 minute...." : "Sign Up"}
           </button>
-          <Link style={{ textAlign: "center" }} to="/login">
+          <Link className="link" style={{ textAlign: "center" }} to="/login">
             Login if Already have an Account
           </Link>
         </form>

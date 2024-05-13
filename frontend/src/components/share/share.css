@@ -47,7 +47,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  width: 90%;
+  width: 100%;
   margin: 15px auto;
 }
 .shareOptions {
@@ -168,7 +168,9 @@
       align-content: center;
       cursor: pointer;
     }
-  
+  .uploadText{
+    font-size: 10px;
+  }
     .uploadText:hover {
       cursor: pointer;
     }
@@ -200,13 +202,19 @@
     }
   
     .sbtn {
-      padding: 5px 6px;
-      font-size: 15px;
+      padding: 2px 3px;
+      font-size: 9px;
       font-weight: 500;
-      border-radius: 5px;
+      border-radius: 2px;
       color: white;
       background-color: green;
       cursor: pointer;
       border: none;
     }
+}
+@media only screen and (max-width: 600px) {
+.uploadText {
+    font-size: 12px;
+  }
+    
 }
