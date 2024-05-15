@@ -56,6 +56,11 @@ const AuthReducer = (state, action) => {
         ...state,
         chatSelectedUser: action.payload,
       };
+    case "TOGGLE_HAMBERGUR":
+      return {
+        ...state,
+        hambergur: action.payload,
+      };
     default:
       return state;
   }

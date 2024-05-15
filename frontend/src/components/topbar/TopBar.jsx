@@ -2,18 +2,22 @@ import "./topbar.css";
 import { FiSearch } from "react-icons/fi";
 import { BsPersonFill, BsFillChatLeftDotsFill } from "react-icons/bs";
 import { IoMdNotifications } from "react-icons/io";
-import { NavLink, Link, useNavigate } from "react-router-dom";
+import { NavLink, Link, useNavigate, useLocation } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../context/AuthContext";
-import Form from "../profileForm/Form";
 import { enqueueSnackbar } from "notistack";
 import axiosInstance from "../../services/instance";
 import { socket } from "../../utility/socket";
 import ProfileModal from "../../utility/ProfileModal";
 import PasswordUpdateModal from "../../utility/PasswordUpdateModal";
+import { SiFacebook } from "react-icons/si";
+import { RxHamburgerMenu } from "react-icons/rx";
+import { ImCross } from "react-icons/im";
 
 const TopBar = ({ setPostUpdateLike }) => {
   const navigate = useNavigate();
+  const location = useLocation();
+
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
   const [openProfile, setOpenProfile] = useState(false);
   const [showNotification, setShowNotification] = useState(false);
@@ -24,6 +28,7 @@ const TopBar = ({ setPostUpdateLike }) => {
   const [likeMessage, setLikeMessage] = useState([]);
   const [reqMessage, setReqMessage] = useState([]);
   const [followReqNotiCount, setFollowReqNotiCount] = useState(0);
+  const [crossShow, setCrossShow] = useState(false);
 
   document.addEventListener("mousedown", () => {
     if (showNotification || showReqNotification) {
@@ -34,10 +39,8 @@ const TopBar = ({ setPostUpdateLike }) => {
 
   const handleLogout = () => {
     dispatch({ type: "LOADER", payload: true });
-    // setLoading(true);
     localStorage.removeItem("user");
     navigate("/login");
-    // setLoading(false);
     dispatch({ type: "LOADER", payload: false });
     enqueueSnackbar({
       variant: "success",
@@ -49,14 +52,11 @@ const TopBar = ({ setPostUpdateLike }) => {
   const deleteAccount = async () => {
     try {
       alert("Are you Sure to delete Your Account Permanently??");
-      // setLoading(true);
       dispatch({ type: "LOADER", payload: true });
       await axiosInstance.delete("/users/" + user._id);
       await axiosInstance.delete("/posts/" + user._id);
       localStorage.removeItem("user");
       navigate("/");
-      // window.location.reload();
-      // setLoading(false);
       dispatch({ type: "LOADER", payload: false });
       enqueueSnackbar({
         variant: "success",
@@ -65,7 +65,6 @@ const TopBar = ({ setPostUpdateLike }) => {
 
       window.location.reload();
     } catch (error) {
-      // console.error(error);
       enqueueSnackbar({
         variant: "error",
         message: "Some error Occured",
@@ -187,6 +186,23 @@ const TopBar = ({ setPostUpdateLike }) => {
       socket.off("unfollow");
     };
   }, []);
+
+  const handleShowFriends = () => {
+    setCrossShow((prev) => !prev);
+    dispatch({ type: "TOGGLE_HAMBERGUR", payload: !crossShow });
+  };
+
+  window.onresize = function () {
+    let width = window.innerWidth;
+    if (width > 600) {
+      setCrossShow(false);
+      dispatch({ type: "TOGGLE_HAMBERGUR", payload: false });
+    }
+  };
+  useEffect(() => {
+    setCrossShow(false);
+    dispatch({ type: "TOGGLE_HAMBERGUR", payload: false });
+  }, []);
   return (
     <>
       <div className="topbarContainer">
@@ -196,9 +212,26 @@ const TopBar = ({ setPostUpdateLike }) => {
           data-placement="left"
           title="Go Home"
         >
-          <Link to="/" style={{ textDecoration: "none" }}>
+          <Link to="/" style={{ textDecoration: "none" }} className="logo-show">
             <span className="logo">facebook</span>
           </Link>
+          <div className="hamburger-show">
+            {location && location.pathname === "/" ? (
+              crossShow ? (
+                <ImCross className="hamburger" onClick={handleShowFriends} />
+              ) : (
+                <RxHamburgerMenu
+                  className="hamburger"
+                  onClick={handleShowFriends}
+                />
+              )
+            ) : (
+              ""
+            )}
+            <Link to="/">
+              <SiFacebook className="logo-f" />
+            </Link>
+          </div>
         </div>
 
         <div className="topbarMid">

@@ -9,7 +9,7 @@ import axiosInstance from "../../services/instance";
 
 const RightBar = ({ user }) => {
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
-  const { user: currentUser, dispatch } = useContext(AuthContext);
+  const { user: currentUser, dispatch, hambergur } = useContext(AuthContext);
   const [friend, setFriend] = useState([]);
   const [allUsers, setAllUsers] = useState([]);
   const [follow, setFollow] = useState(false);
@@ -86,7 +86,9 @@ const RightBar = ({ user }) => {
 
   const HomeRightBar = () => {
     return (
-      <div className="rightbarContainer">
+      <div
+        className={`${hambergur ? "showFreindRighbar" : "rightbarContainer"}`}
+      >
         <div className="rightbarWrapper">
           <div className="birthdayGift">
             <img src="./asset/gift.png" alt="" className="bday" />
@@ -101,9 +103,9 @@ const RightBar = ({ user }) => {
 
           <div className="onlineFriends">
             <span className="onlineText">
-              Total Online Users : {allUsers.length - 1}
+              Total Users : {allUsers.length - 1}
             </span>
-            <div style={{ width: "70%", height: "100vh" }}>
+            <div>
               {allUsers
                 .filter((val) => val.username !== currentUser.username)
                 .map((friend) => {
@@ -138,16 +140,7 @@ const RightBar = ({ user }) => {
                       >
                         {friend.username}
                       </NavLink>
-                      <span
-                        style={{
-                          fontSize: "10px",
-                          paddingLeft: "5px",
-                          fontWeight: "500",
-                          color: "grey",
-                        }}
-                      >
-                        Online
-                      </span>
+                      <span className="onlineTag">Online</span>
                     </div>
                   );
                 })}

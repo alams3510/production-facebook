@@ -20,6 +20,7 @@ const INITIALSTATE = {
   loader: false,
   message: [],
   chatSelectedUser: {},
+  hambergur: false,
 };
 export const AuthContext = createContext(INITIALSTATE);
 
@@ -38,6 +39,7 @@ const AuthContextProvider = ({ children }) => {
         loader: state.loader,
         message: state.message,
         chatSelectedUser: state.chatSelectedUser,
+        hambergur: state.hambergur,
         dispatch,
       }}
     >
