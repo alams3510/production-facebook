@@ -152,21 +152,27 @@ const MessageBox = () => {
                   );
               })
             : ""}
+          <form
+            onSubmit={handleSend}
+            className="input-group mt-5  bottom-input"
+          >
+            <input
+              type="text"
+              className="form-control"
+              placeholder="Write Yours Messages"
+              onChange={handleChange}
+              value={messag.message}
+            />
+            <button
+              type="submit"
+              className="btn btn-primary"
+              id="button-addon2"
+            >
+              <PiPaperPlaneRightBold />
+            </button>
+          </form>
         </div>
       </div>
-
-      <form onSubmit={handleSend} className="input-group mt-5  bottom-input">
-        <input
-          type="text"
-          className="form-control"
-          placeholder="Write Yours Messages"
-          onChange={handleChange}
-          value={messag.message}
-        />
-        <button type="submit" className="btn btn-primary" id="button-addon2">
-          <PiPaperPlaneRightBold />
-        </button>
-      </form>
 
       <DeleteModal deleteChats={deleteChats} />
     </div>
