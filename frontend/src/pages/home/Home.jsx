@@ -12,11 +12,6 @@ const Home = () => {
   const { user } = useContext(AuthContext);
 
   const [postUpdateLike, setPostUpdateLike] = useState(0);
-  useEffect(() => {
-    if (user == null) {
-      navigate("/login");
-    }
-  }, [user]);
   return (
     <>
       <TopBar setPostUpdateLike={setPostUpdateLike} />

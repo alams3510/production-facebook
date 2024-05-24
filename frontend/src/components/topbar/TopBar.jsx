@@ -37,16 +37,25 @@ const TopBar = ({ setPostUpdateLike }) => {
     }
   });
 
-  const handleLogout = () => {
-    dispatch({ type: "LOADER", payload: true });
-    localStorage.removeItem("user");
-    navigate("/login");
-    dispatch({ type: "LOADER", payload: false });
-    enqueueSnackbar({
-      variant: "success",
-      message: "you have successfully Logged Out",
-    });
-    window.location.reload();
+  const handleLogout = async () => {
+    try {
+      const res = await axiosInstance.get("auth/logout");
+      dispatch({ type: "LOADER", payload: true });
+      dispatch({ type: "LOGOUT", payload: res.data });
+      dispatch({ type: "LOADER", payload: false });
+
+      localStorage.removeItem("user");
+      enqueueSnackbar({
+        variant: "success",
+        message: "you have successfully Logged Out",
+      });
+    } catch (err) {
+      dispatch({ type: "LOADER", payload: false });
+      enqueueSnackbar({
+        variant: "error",
+        message: "Not able to Log Out",
+      });
+    }
   };
 
   const deleteAccount = async () => {

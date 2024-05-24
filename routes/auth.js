@@ -41,4 +41,8 @@ router.post("/login", async (req, res) => {
     res.status(500).json("error");
   }
 });
+
+router.get("/logout", (req, res) => {
+  res.status(200).json(true);
+});
 module.exports = router;
