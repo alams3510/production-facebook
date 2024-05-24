@@ -4,16 +4,16 @@ const DeleteModal = ({ deleteChats }) => {
   return (
     <div>
       <div
-        class="modal fade"
+        className="modal fade"
         id="chatDeleteModal"
         tabindex="-1"
         aria-labelledby="exampleModalLabel"
         aria-hidden="true"
       >
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title text-danger" id="exampleModalLabel">
+        <div className="modal-dialog">
+          <div className="modal-content">
+            <div className="modal-header">
+              <h5 className="modal-title text-danger" id="exampleModalLabel">
                 Are You Sure ? Delete All The Chats !!
               </h5>
               <button
@@ -23,17 +23,17 @@ const DeleteModal = ({ deleteChats }) => {
                 aria-label="Close"
               ></button>
             </div>
-            <div class="modal-footer">
+            <div className="modal-footer">
               <button
                 type="button"
-                class="btn btn-secondary"
+                className="btn btn-secondary"
                 data-bs-dismiss="modal"
               >
                 Close
               </button>
               <button
                 type="button"
-                class="btn btn-danger"
+                className="btn btn-danger"
                 onClick={() => deleteChats()}
                 data-bs-dismiss="modal"
               >

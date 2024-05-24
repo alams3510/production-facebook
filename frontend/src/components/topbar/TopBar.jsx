@@ -45,6 +45,7 @@ const TopBar = ({ setPostUpdateLike }) => {
       dispatch({ type: "LOADER", payload: false });
 
       localStorage.removeItem("user");
+      navigate("login");
       enqueueSnackbar({
         variant: "success",
         message: "you have successfully Logged Out",

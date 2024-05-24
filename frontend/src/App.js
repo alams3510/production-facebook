@@ -1,4 +1,4 @@
-import { Route, Routes, BrowserRouter, Navigate } from "react-router-dom";
+import { Route, Routes, BrowserRouter, useNavigate } from "react-router-dom";
 import Home from "./pages/home/Home";
 import Login from "./pages/login/Login";
 import Register from "./pages/register/Register";
@@ -10,11 +10,12 @@ import Msg from "./pages/msg/Msg";
 import MessageBox from "./pages/msg/MessageBox";
 import { socket } from "./utility/socket";
 import PageNotFound from "./pages/pageNotFound/PageNotFound";
+import Routing from "../src/allRoutes/index";
 
 function App() {
+  const navigate = useNavigate();
   const { user, loader } = useContext(AuthContext);
   const [isConnected, setIsConnected] = useState(socket.connected);
-
   useEffect(() => {
     function onConnect() {
       setIsConnected(true);
@@ -34,46 +35,17 @@ function App() {
     };
   }, []);
 
+  useEffect(() => {
+    if (user) {
+      navigate("/");
+    } else {
+      navigate("/login");
+    }
+  }, [user]);
+
   return (
     <>
-      <BrowserRouter>
-        <Routes>
-          <Route
-            path="/"
-            element={user !== null ? <Home /> : <Navigate to="/login" />}
-          />
-          <Route
-            path="/login"
-            element={user !== null ? <Navigate to="/" /> : <Login />}
-          />
-          <Route
-            path="/register"
-            element={user !== null ? <Navigate to="/" /> : <Register />}
-          />
-          <Route
-            path="/profile/:username"
-            element={user !== null ? <Profile /> : <Navigate to="/login" />}
-          />
-          <Route
-            path="/msg"
-            element={user !== null ? <Msg /> : <Navigate to="/login" />}
-          />
-          <Route
-            path="/userMsgPage/:_id"
-            element={user !== null ? <MessageBox /> : <Navigate to="/login" />}
-          />
-          <Route
-            path="/logout"
-            element={user ? <Navigate to="/" /> : <Login />}
-          />
-          <Route
-            path="*"
-            element={
-              user !== null ? <PageNotFound /> : <Navigate to="/login" />
-            }
-          />
-        </Routes>
-      </BrowserRouter>
+      <Routing />
       {loader && (
         <div
           style={{

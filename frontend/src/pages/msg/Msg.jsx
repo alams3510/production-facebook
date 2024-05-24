@@ -68,9 +68,10 @@ const Msg = () => {
         <hr />
         <ul className="d-flex flex-column gap-2 col-md-6 col-sm-12">
           {friend && friend.length
-            ? friend.map((item) => {
+            ? friend.map((item, indx) => {
                 return (
                   <li
+                    key={indx}
                     className="h-30 p-3 bg-primary msg-list"
                     onClick={() => handlSelected(item)}
                   >
