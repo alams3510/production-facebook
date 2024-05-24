@@ -54,13 +54,24 @@ function App() {
             path="/profile/:username"
             element={user !== null ? <Profile /> : <Navigate to="/login" />}
           />
-          <Route path="/msg" element={<Msg />} />
-          <Route path="/userMsgPage/:_id" element={<MessageBox />} />
+          <Route
+            path="/msg"
+            element={user !== null ? <Msg /> : <Navigate to="/login" />}
+          />
+          <Route
+            path="/userMsgPage/:_id"
+            element={user !== null ? <MessageBox /> : <Navigate to="/login" />}
+          />
           <Route
             path="/logout"
             element={user ? <Navigate to="/" /> : <Login />}
           />
-          <Route path="*" element={<PageNotFound />} />
+          <Route
+            path="*"
+            element={
+              user !== null ? <PageNotFound /> : <Navigate to="/login" />
+            }
+          />
         </Routes>
       </BrowserRouter>
       {loader && (
