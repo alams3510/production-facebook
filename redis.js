@@ -1,4 +1,8 @@
 const { createClient } = require("ioredis");
+const express = require("express");
+
+const app = express();
+const port = process.env.REDIS_PORT || 3000;
 
 const client = createClient({
   password: process.env.REDIS_PASSWORD,
@@ -35,6 +39,10 @@ client.on("end", () => {
 
 client.on("warning", (warning) => {
   console.warn("Redis warning: ", warning);
+});
+
+app.listen(port, () => {
+  console.log(`Redis listening at : ${port}`);
 });
 
 module.exports = client;
