@@ -1,4 +1,4 @@
-const { createClient } = require("ioredis");
+const { createClient } = require("redis");
 
 const client = createClient({
   password: process.env.REDIS_PASSWORD,
