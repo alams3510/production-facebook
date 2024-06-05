@@ -5,10 +5,7 @@ const client = createClient({
   socket: {
     host: process.env.REDIS_HOST,
     port: process.env.REDIS_PORT,
-    connectTimeout: 10000, // 10 seconds
-    // tls: {
-    //   rejectUnauthorized: false, // Use true and provide the correct CA for production
-    // },
+    connectTimeout: 10000,
   },
 });
 
@@ -16,8 +13,8 @@ client.on("connect", () => {
   console.log("Connected to Redis");
 });
 
-client.on("error", () => {
-  console.log("Error in Redis server");
+client.on("error", (error) => {
+  console.log("Error in Redis server", error);
 });
 client.on("ready", () => {
   console.log("Redis client ready");
@@ -37,12 +34,18 @@ client.on("warning", (warning) => {
   console.warn("Redis warning: ", warning);
 });
 
-(async () => {
-  try {
-    await client.connect();
-  } catch (error) {
-    console.error("Failed to connect to Redis:", error);
-  }
-})();
+process.on("SIGINT", () => {
+  redis.quit(() => {
+    console.log("Redis connection closed");
+    process.exit();
+  });
+});
+
+process.on("SIGTERM", () => {
+  redis.quit(() => {
+    console.log("Redis connection closed");
+    process.exit();
+  });
+});
 
 module.exports = client;

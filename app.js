@@ -40,13 +40,13 @@ var io = socketIO(server, { cors: { origin: "*" } });
 //socket connection with client side
 
 io.on("connection", (socket) => {
-  console.log("New user connected with cliend Id" + socket.id);
+  console.log("New user connected with clientId with socket is " + socket.id);
 });
 dotenv.config();
 //connection with mongoDB Atlas
 mongoose.connect(
   process.env.MONGO_URL,
-  { useNewUrlParser: true, useUnifiedTopology: true },
+  { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true },
   () => {
     console.log("Connected to MongoDB");
   }
