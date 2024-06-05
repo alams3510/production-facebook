@@ -3,10 +3,13 @@ const User = require("../models/User");
 const Post = require("../models/Post");
 const Msg = require("../models/Msg");
 const bcrypt = require("bcrypt");
+const cacheMiddleware = require("../cacheMiddleware");
+const redisClient = require("../redis");
 
 //updating the user details
 router.put("/:id", async (req, res) => {
   if (req.body.userId === req.params.id) {
+    redisClient.flushdb();
     if (req.body.password) {
       try {
         const salt = await bcrypt.genSalt(10);
@@ -46,6 +49,7 @@ router.put("/:id/updatePassword", async (req, res) => {
     return res.status(400).json("Old Password Not Matched");
   }
   try {
+    redisClient.flushdb();
     const salt = await bcrypt.genSalt(10);
     const updatedPassword = await bcrypt.hash(newPassword, salt);
     await User.updateOne(
@@ -70,6 +74,7 @@ router.delete("/:id", async (req, res) => {
       },
       { $group: { _id: "$_id" } },
     ]);
+    redisClient.flushdb();
     await Msg.remove({ _id: { $in: idsList } });
     await Post.deleteMany({ userId });
     await User.findByIdAndDelete(userId);
@@ -81,7 +86,7 @@ router.delete("/:id", async (req, res) => {
 
 //get a single user
 
-router.get("/", async (req, res) => {
+router.get("/", cacheMiddleware, async (req, res) => {
   const userId = req.query.userId;
   const username = req.query.username;
   try {
@@ -97,7 +102,7 @@ router.get("/", async (req, res) => {
 
 //find all friends
 
-router.get("/friends/:id", async (req, res) => {
+router.get("/friends/:id", cacheMiddleware, async (req, res) => {
   try {
     const user = await User.findOne({ _id: req.params.id });
     const friends = await Promise.all(
@@ -120,6 +125,7 @@ router.get("/friends/:id", async (req, res) => {
 
 router.put("/:id/follow", async (req, res) => {
   if (req.body.userId !== req.params.id) {
+    redisClient.flushdb();
     try {
       const user = await User.findById(req.params.id);
       const currentUser = await User.findById(req.body.userId);
@@ -146,6 +152,7 @@ router.put("/:id/follow", async (req, res) => {
 
 router.put("/:id/unfollow", async (req, res) => {
   if (req.body.userId !== req.params.id) {
+    redisClient.flushdb();
     try {
       const user = await User.findById(req.params.id);
       const currentUser = await User.findById(req.body.userId);
@@ -170,7 +177,7 @@ router.put("/:id/unfollow", async (req, res) => {
 
 //find all user list
 
-router.get("/allUsers", async (req, res) => {
+router.get("/allUsers", cacheMiddleware, async (req, res) => {
   try {
     const user = await User.find();
 

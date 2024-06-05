@@ -12,7 +12,6 @@ const cors = require("cors");
 const http = require("http");
 let server = http.createServer(app);
 const socketIO = require("socket.io");
-var io = socketIO(server, { cors: { origin: "*" } });
 
 app.use((req, res, next) => {
   req.io = io;
@@ -36,6 +35,7 @@ app.use(
     credentials: true,
   })
 );
+var io = socketIO(server, { cors: { origin: "*" } });
 
 //socket connection with client side
 

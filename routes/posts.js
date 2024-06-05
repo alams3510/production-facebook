@@ -1,11 +1,14 @@
 const router = require("express").Router();
 const Post = require("../models/Post");
 const User = require("../models/User");
+const cacheMiddleware = require("../cacheMiddleware");
+const redisClient = require("../redis");
 
 //create a post
 
 router.post("/", async (req, res) => {
   try {
+    redisClient.flushdb();
     const newPost = new Post(req.body);
     const savedata = await newPost.save();
     res.status(200).json(savedata);
@@ -20,6 +23,7 @@ router.put("/:id", async (req, res) => {
   const post = await Post.findById(req.params.id);
   if (post.userId === req.body.userId) {
     try {
+      redisClient.flushdb();
       const data = await Post.findByIdAndUpdate(req.params.id, {
         $set: req.body,
       });
@@ -36,13 +40,9 @@ router.put("/:id", async (req, res) => {
 
 router.delete("/:id", async (req, res) => {
   try {
-    // const post= await Post.findById(req.params.id);
-    // if(req.body.userId===post.userId){
+    redisClient.flushdb();
     await Post.findByIdAndDelete(req.params.id);
     res.status(200).json("post deleted");
-    // } else{
-    //     res.status(400).json("can not delete anothers post");
-    // }
   } catch (error) {
     res.status(400).json(error);
   }
@@ -53,6 +53,7 @@ router.delete("/:id", async (req, res) => {
 router.put("/:id/like", async (req, res) => {
   try {
     const post = await Post.findById(req.params.id);
+    redisClient.flushdb();
     if (post.likes.includes(req.body.userId) === false) {
       await post.updateOne({ $push: { likes: req.body.userId } });
       req.io.emit("postLiked", {
@@ -76,7 +77,7 @@ router.put("/:id/like", async (req, res) => {
 });
 
 //get a post
-router.get("/:id", async (req, res) => {
+router.get("/:id", cacheMiddleware, async (req, res) => {
   try {
     const post = await Post.findById(req.params.id);
     res.status(200).json(post);
@@ -87,7 +88,7 @@ router.get("/:id", async (req, res) => {
 
 //get timeline/all post
 
-router.get("/timeline/:userId", async (req, res) => {
+router.get("/timeline/:userId", cacheMiddleware, async (req, res) => {
   try {
     const currentUser = await User.findById(req.params.userId);
     const userPosts = await Post.find({ userId: currentUser._id });
@@ -104,7 +105,7 @@ router.get("/timeline/:userId", async (req, res) => {
 
 //get users all posts
 
-router.get("/profile/:username", async (req, res) => {
+router.get("/profile/:username", cacheMiddleware, async (req, res) => {
   const username = req.params.username;
   try {
     const user = await User.findOne({ username: username });
