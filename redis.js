@@ -1,8 +1,4 @@
 const { createClient } = require("ioredis");
-const express = require("express");
-
-const app = express();
-const port = process.env.REDIS_PORT || 3000;
 
 const client = createClient({
   password: process.env.REDIS_PASSWORD,
@@ -10,9 +6,9 @@ const client = createClient({
     host: process.env.REDIS_HOST,
     port: process.env.REDIS_PORT,
     connectTimeout: 10000, // 10 seconds
-    tls: {
-      rejectUnauthorized: false, // Use true and provide the correct CA for production
-    },
+    // tls: {
+    //   rejectUnauthorized: false, // Use true and provide the correct CA for production
+    // },
   },
 });
 
@@ -41,8 +37,12 @@ client.on("warning", (warning) => {
   console.warn("Redis warning: ", warning);
 });
 
-app.listen(port, () => {
-  console.log(`Redis listening at : ${port}`);
-});
+(async () => {
+  try {
+    await client.connect();
+  } catch (error) {
+    console.error("Failed to connect to Redis:", error);
+  }
+})();
 
 module.exports = client;
