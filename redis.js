@@ -5,6 +5,10 @@ const client = createClient({
   socket: {
     host: process.env.REDIS_HOST,
     port: process.env.REDIS_PORT,
+    connectTimeout: 10000, // 10 seconds
+    tls: {
+      rejectUnauthorized: false, // Use true and provide the correct CA for production
+    },
   },
 });
 
